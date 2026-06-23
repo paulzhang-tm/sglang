@@ -80,6 +80,10 @@ class EPLBManager:
             self._server_args, self._model_runner.model_config, logical_count
         )
 
+        from sglang.srt.model_executor.model_runner_components.moe_ep_setup import (
+            init_lplb_solvers,
+        )
+
         update_layer_ids_chunks = self._compute_update_layer_ids_chunks()
         for chunk_index, update_layer_ids in enumerate(update_layer_ids_chunks):
             if len(update_layer_ids_chunks) > 1:
@@ -94,7 +98,7 @@ class EPLBManager:
                 expert_backup_client=self._model_runner.expert_backup_client,
                 update_weights_from_disk_callable=self._model_runner.weight_updater.update_weights_from_disk,
                 ep_dispatch_algorithm=self._model_runner.server_args.ep_dispatch_algorithm,
-                init_lplb_solvers_callable=lambda: self._model_runner.init_lplb_solvers(
+                init_lplb_solvers_callable=lambda: init_lplb_solvers(
                     model_config=self._model_runner.model_config
                 ),
             )
